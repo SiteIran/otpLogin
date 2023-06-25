@@ -2,6 +2,7 @@ import { OtpComponent } from './otp/otp.component';
 import { ModalController, ModalOptions } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -13,6 +14,8 @@ export class SignInPage implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
+    private authService: AuthService,
+
   ) { }
 
   ngOnInit() {
@@ -30,6 +33,16 @@ export class SignInPage implements OnInit {
         return;
       }
       console.log(this.form.value);
+      console.log('mobile', this.form.get('phone')!.value);
+      const mobile = this.form.get('phone')!.value;
+      this.authService.sendOTP(mobile).subscribe(
+        () => {
+          // ارسال موفق
+        },
+        (error) => {
+          // خطا در ارسال
+        }
+      );
 
       const options: ModalOptions = {
         component: OtpComponent,

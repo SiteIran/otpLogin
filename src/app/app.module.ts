@@ -7,12 +7,31 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import { AuthService } from './services/auth.service';
+import { DataService } from './services/data.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { JwtModule } from '@auth0/angular-jwt';
 
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    JwtModule.forRoot({
+     config: {
+       tokenGetter: () => {
+         return localStorage.getItem('token');
+       }
+     }
+   }),
+   IonicModule.forRoot(),
+   ReactiveFormsModule,
+   AppRoutingModule
+   ],
+  providers: [AuthService, DataService, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

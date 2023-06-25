@@ -1,8 +1,11 @@
 <ion-content [fullscreen]="true">
-  <ion-button fill="clear" class="ion-margin" (click)="dismissModal()">
-    <ion-icon name="arrow-back" slot="icon-only" color="white"></ion-icon>
+  <ion-button fill="clear" class="ion-margin" (click)="dismissModal()" [disabled]="countdown !== 0">
+    <ion-icon *ngIf="countdown !== 0" name="time" slot="icon-only" color="white"></ion-icon>
+    <ion-icon *ngIf="countdown === 0" name="arrow-back" slot="icon-only" color="white"></ion-icon>
+    <span *ngIf="countdown !== 0"> &nbsp;: <b>{{ countdown }}</b></span>
   </ion-button>
 </ion-content>
+
 
 <ion-footer class="ion-no-border">
   <ion-list lines="none">
@@ -20,12 +23,12 @@
     </ion-item>
 
     <ion-item lines="none" class="ion-margin-horizontal">
-      <ion-button fill="clear" color="primary" slot="start" (click)="resendOtp()">
+      <ion-button fill="clear" color="primary" slot="start" (click)="resendOtp()" [disabled]="countdown !== 0">
         RESEND OTP
       </ion-button>
-      <ion-fab-button slot="end" color="danger" (click)="onVerifyOtp()">
+      <ion-fab-button slot="end" color="danger" (click)="onVerifyOtp()" [disabled]="disableVerifyButton">
         <ion-icon name="arrow-forward-outline"></ion-icon>
-      </ion-fab-button>
+      </ion-fab-button>      
     </ion-item>
   </ion-list>
 </ion-footer>
