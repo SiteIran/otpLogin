@@ -2,7 +2,7 @@
   <ion-button fill="clear" class="ion-margin" (click)="dismissModal()" [disabled]="countdown !== 0">
     <ion-icon *ngIf="countdown !== 0" name="time" slot="icon-only" color="white"></ion-icon>
     <ion-icon *ngIf="countdown === 0" name="arrow-back" slot="icon-only" color="white"></ion-icon>
-    <span *ngIf="countdown !== 0"> &nbsp;: <b>{{ countdown }}</b></span>
+    <ion-label color="white" *ngIf="countdown !== 0"> &nbsp;: <b>{{ countdown }}</b></ion-label>
   </ion-button>
 </ion-content>
 

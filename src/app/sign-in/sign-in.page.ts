@@ -32,8 +32,8 @@ export class SignInPage implements OnInit {
         this.form.markAllAsTouched();
         return;
       }
-      console.log(this.form.value);
-      console.log('mobile', this.form.get('phone')!.value);
+      // console.log(this.form.value);
+      // console.log('mobile', this.form.get('phone')!.value);
       const mobile = this.form.get('phone')!.value;
       this.authService.sendOTP(mobile).subscribe(
         () => {
