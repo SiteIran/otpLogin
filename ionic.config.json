@@ -1,0 +1,7 @@
+{
+  "name": "siteiran",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
