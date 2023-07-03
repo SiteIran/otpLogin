@@ -1,10 +1,10 @@
+import { AuthService } from 'src/app/services/auth.service';
+
 import { Injectable } from '@angular/core';
 import { CanLoad, Route, UrlSegment, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
-
-import { AuthService } from 'src/app/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +13,21 @@ import { AuthService } from 'src/app/services/auth.service';
   constructor(private authService: AuthService, private router: Router) {}
  
   canLoad(): Observable<boolean> {
-   return this.authService.isAuthenticated.pipe(
-    filter((val) => val !== null), // Filter out initial Behaviour subject value
-    take(1), // Otherwise the Observable doesn't complete!
-    map((isAuthenticated) => {
-     if (isAuthenticated) {
-      return true;
-     } else {
-      this.router.navigateByUrl('/sign-in');
-      return false;
-     }
-    })
-   );
+    this.authService.loadToken(); // فراخوانی متد loadToken() از AuthService
+    
+    return this.authService.isAuthenticated.pipe(
+      filter((val) => val !== null),
+      take(1),
+      map((isAuthenticated) => {
+        console.log(isAuthenticated);
+        if (isAuthenticated) {
+          return true;
+        } else {
+          this.router.navigateByUrl('/sign-in');
+          return false;
+        }
+      })
+    );
   }
- }
+  
+  }

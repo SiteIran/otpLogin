@@ -12,6 +12,7 @@ import { DataService } from './services/data.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
+import { AuthGuard } from './guards/auth.guard';
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import { JwtModule } from '@auth0/angular-jwt';
    ReactiveFormsModule,
    AppRoutingModule
    ],
-  providers: [AuthService, DataService, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [AuthService, AuthGuard, DataService, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

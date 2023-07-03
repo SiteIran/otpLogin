@@ -70,6 +70,24 @@ export class OtpComponent implements OnInit {
     if (this.otp) {
       console.log(this.otp)
       this.verifyOtp.emit(this.otp);
+      this.loadingCtrl.create({
+        message: 'Verify OTP...'
+      }).then(loading => {
+        loading.present();
+  
+        this.authService.login(this.phone ?? '', this.otp ?? '').subscribe(
+          () => {
+            loading.dismiss();
+          //  this.startCountdown(); // شمارش معکوس را از ابتدا شروع کنید
+            this.showToast('OTP has been verify successfully.');
+          },
+          error => {
+            loading.dismiss();
+            this.showToast('Failed to verify OTP. Please try again.');
+          }
+        );
+      });
+
     }
   }
 
