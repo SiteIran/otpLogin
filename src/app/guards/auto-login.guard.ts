@@ -1,14 +1,32 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Route, UrlSegment, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanLoad, Router } from '@angular/router';
+import { Observable, from } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { filter, map, take, switchMap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+ providedIn: 'root'
 })
 export class AutoLoginGuard implements CanLoad {
-  canLoad(
-    route: Route,
-    segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
-  }
+constructor(private authService: AuthService, private router: Router) {}
+
+ canLoad(): Observable<boolean> {
+  // فراخوانی تابع loadToken از AuthService و تبدیل Promise به Observable
+  return from(this.authService.loadToken()).pipe(
+    // استفاده از switchMap برای انتقال به Observable بعدی
+    switchMap(() => this.authService.isAuthenticated),
+    // استفاده از map برای تبدیل مقادیر
+    map((isAuthenticated) => {
+      if (isAuthenticated) {
+        console.log('check true', isAuthenticated);
+        this.router.navigateByUrl('/home', { replaceUrl: true });
+        return false;
+      } else {
+        console.log('check false', isAuthenticated);
+        return true;
+      }
+    })
+  );
+}
+
 }
