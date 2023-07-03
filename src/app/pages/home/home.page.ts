@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -8,10 +9,11 @@ import { Router } from '@angular/router';
 })
 export class HomePage {
 
-  constructor(private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit() {
-    console.log('ngOnInit() is called');
-    this.router.navigateByUrl('/home', { replaceUrl: true });
-  }
+  async logout() {
+    await this.authService.logout();
+    this.router.navigateByUrl('/', { replaceUrl: true });
+   }
+  
 }
