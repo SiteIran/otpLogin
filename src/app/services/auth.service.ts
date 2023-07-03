@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { throwError } from 'rxjs';
@@ -8,6 +8,10 @@ import { throwError } from 'rxjs';
 @Injectable()
 export class AuthService {
   private apiUrl = 'http://localhost:8000/api';
+
+   // Init with null to filter out the first value in a guard!
+ isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+ token = '';
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {}
 
