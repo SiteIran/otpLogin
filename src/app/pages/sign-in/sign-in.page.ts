@@ -2,6 +2,8 @@ import { OtpComponent } from './otp/otp.component';
 import { ModalController, ModalOptions } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -15,7 +17,7 @@ export class SignInPage implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private authService: AuthService,
-
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -32,8 +34,7 @@ export class SignInPage implements OnInit {
         this.form.markAllAsTouched();
         return;
       }
-      // console.log(this.form.value);
-      // console.log('mobile', this.form.get('phone')!.value);
+
       const mobile = this.form.get('phone')!.value;
       this.authService.sendOTP(mobile).subscribe(
         () => {
@@ -50,10 +51,14 @@ export class SignInPage implements OnInit {
           phone: this.form.value.phone
         }
       };
-      const modal = await this.modalCtrl.create(options); // اصلاح await
-      await modal.present(); // اصلاح await
-      const { data } = await modal.onWillDismiss(); // اصلاح await
+      const modal = await this.modalCtrl.create(options);
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
       console.log(data);
+
+      if (data && data.verified) {
+        this.router.navigate(['/home'], { replaceUrl: true });
+      }
     } catch (e) {
       console.log(e);
     }

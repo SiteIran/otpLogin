@@ -16,11 +16,9 @@ export class OtpComponent implements OnInit {
     length: 4,
     allowNumbersOnly: true,
     inputClass: 'otp-input-style'
-  }; // تعریف متغیر config
-  countdown: number = 120; // زمان شمارش معکوس به ثانیه
+  };
+  countdown: number = 120;
   disableVerifyButton: boolean = true;
-
-
 
   constructor(
     public modalCtrl: ModalController,
@@ -28,14 +26,14 @@ export class OtpComponent implements OnInit {
     public toastCtrl: ToastController,
     private authService: AuthService,
     private router: Router
-    ) { }
+  ) {}
 
   ngOnInit() {
     this.startCountdown();
   }
 
   startCountdown() {
-    this.countdown = 120; // یا هر مقدار اولیه دلخواهی که می‌خواهید را قرار دهید
+    this.countdown = 120;
     const intervalId = setInterval(() => {
       if (this.countdown === 0) {
         clearInterval(intervalId);
@@ -44,7 +42,6 @@ export class OtpComponent implements OnInit {
       }
     }, 1000);
   }
-  
 
   dismissModal() {
     this.modalCtrl.dismiss();
@@ -58,7 +55,7 @@ export class OtpComponent implements OnInit {
     if (event) {
       this.otp = event;
       console.log(this.otp);
-      
+
       if (this.otp?.length === this.config.length) {
         this.disableVerifyButton = false;
       } else {
@@ -66,23 +63,21 @@ export class OtpComponent implements OnInit {
       }
     }
   }
-  
 
   onVerifyOtp() {
     if (this.otp) {
-      console.log(this.otp)
+      console.log(this.otp);
       this.verifyOtp.emit(this.otp);
       this.loadingCtrl.create({
         message: 'Verify OTP...'
       }).then(loading => {
         loading.present();
-  
+
         this.authService.login(this.phone ?? '', this.otp ?? '').subscribe(
           () => {
             loading.dismiss();
-          //  this.startCountdown(); // شمارش معکوس را از ابتدا شروع کنید
-            this.router.navigateByUrl('/home', { replaceUrl: true });
-            this.showToast('OTP has been verify successfully.');
+            this.modalCtrl.dismiss({ verified: true }); // اصلاح
+            this.showToast('OTP has been verified successfully.');
           },
           error => {
             loading.dismiss();
@@ -90,7 +85,6 @@ export class OtpComponent implements OnInit {
           }
         );
       });
-
     }
   }
 
@@ -100,11 +94,11 @@ export class OtpComponent implements OnInit {
         message: 'Resending OTP...'
       }).then(loading => {
         loading.present();
-  
+
         this.authService.sendOTP(this.phone ?? '').subscribe(
           () => {
             loading.dismiss();
-            this.startCountdown(); // شمارش معکوس را از ابتدا شروع کنید
+            this.startCountdown();
             this.showToast('OTP has been resent successfully.');
           },
           error => {
@@ -115,7 +109,7 @@ export class OtpComponent implements OnInit {
       });
     }
   }
-  
+
   async showToast(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,
@@ -124,5 +118,4 @@ export class OtpComponent implements OnInit {
     });
     toast.present();
   }
-  
 }

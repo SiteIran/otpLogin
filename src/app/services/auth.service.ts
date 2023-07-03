@@ -21,7 +21,7 @@ export class AuthService {
     this.loadToken();
   }
 
-  async loadToken() {
+  public async loadToken() {
     const token = await Preferences.get({ key: TOKEN_KEY });
     if (token && token.value) {
       console.log('set token: ', token.value);

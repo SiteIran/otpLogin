@@ -4,18 +4,6 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AutoLoginGuard } from './guards/auto-login.guard';
 import { AuthGuard } from './guards/auth.guard';
 
-// const routes: Routes = [
-//   {
-//     path: '',
-//     redirectTo: 'sign-in',
-//     pathMatch: 'full'
-//   },
-//   {
-//     path: 'sign-in',
-//     loadChildren: () => import('./pages/sign-in/sign-in.module').then( m => m.SignInPageModule)
-//   },
-// ];
-
 export const routes: Routes = [
   {
     path: '',
