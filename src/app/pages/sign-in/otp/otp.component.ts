@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -26,6 +27,7 @@ export class OtpComponent implements OnInit {
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
     private authService: AuthService,
+    private router: Router
     ) { }
 
   ngOnInit() {
@@ -79,6 +81,7 @@ export class OtpComponent implements OnInit {
           () => {
             loading.dismiss();
           //  this.startCountdown(); // شمارش معکوس را از ابتدا شروع کنید
+            this.router.navigateByUrl('/home', { replaceUrl: true });
             this.showToast('OTP has been verify successfully.');
           },
           error => {

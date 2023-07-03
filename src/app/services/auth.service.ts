@@ -54,8 +54,8 @@ export class AuthService {
    }
   
 
-  getUserInfo(): Observable<any> {
-    const token = localStorage.getItem('token');
+   getUserInfo(): Observable<any> {
+    const token = this.token;
     if (token && !this.jwtHelper.isTokenExpired(token)) {
       // اعتبارسنجی توکن با موفقیت انجام شده است
       this.isAuthenticated.next(true);
@@ -70,6 +70,8 @@ export class AuthService {
       return throwError('توکن منقضی شده یا معتبر نیست');
     }
   }
+  
+  
 
   logout(): Promise<void> {
     this.isAuthenticated.next(false);
