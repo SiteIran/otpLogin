@@ -18,11 +18,9 @@ constructor(private authService: AuthService, private router: Router) {}
     // استفاده از map برای تبدیل مقادیر
     map((isAuthenticated) => {
       if (isAuthenticated) {
-        console.log('check true', isAuthenticated);
         this.router.navigateByUrl('/home', { replaceUrl: true });
         return false;
       } else {
-        console.log('check false', isAuthenticated);
         return true;
       }
     })

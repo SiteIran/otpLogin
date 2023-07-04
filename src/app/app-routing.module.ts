@@ -9,19 +9,18 @@ export const routes: Routes = [
     path: '',
     redirectTo: 'sign-in',
     pathMatch: 'full'
-   },
-   {
+  },
+  {
     path: 'sign-in',
-  
-    loadChildren: () => import('./pages/sign-in/sign-in.module').then( m => m.SignInPageModule),
-    canLoad: [AutoLoginGuard] // Check if we should show the introduction or forward to inside
-   },
-   {
+    loadChildren: () => import('./pages/sign-in/sign-in.module').then(m => m.SignInPageModule),
+    canLoad: [AutoLoginGuard] // بررسی اینکه آیا باید صفحه معرفی نمایش داده شود یا به داخل ریدایرکت شود
+  },
+  {
     path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then((m) => m.HomePageModule),
+    loadChildren: () => import('./pages/home/home.module').then(m => m.HomePageModule),
     canLoad: [AuthGuard]
-   },
-  ];
+  },
+];
 
 @NgModule({
   imports: [

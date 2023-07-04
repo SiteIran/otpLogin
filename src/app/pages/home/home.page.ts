@@ -9,11 +9,26 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomePage {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
 
-  async logout() {
-    await this.authService.logout();
+    // this.authService.getUserInfo().subscribe(
+    //   (userInfo) => {
+    //     // پردازش اطلاعات کاربر دریافت شده
+    //     console.log(userInfo);
+    //   },
+    //   (error) => {
+    //     // مدیریت خطاها
+    //     console.error(error);
+    //   }
+    // );
+    
+  }
+
+   async logout() {
+    await this.authService.logout().toPromise();
     this.router.navigateByUrl('/', { replaceUrl: true });
-   }
+  }
+  
+  
   
 }

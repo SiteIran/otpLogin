@@ -11,7 +11,7 @@ import { AuthService } from './services/auth.service';
 import { DataService } from './services/data.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { JwtModule } from '@auth0/angular-jwt';
+
 import { AuthGuard } from './guards/auth.guard';
 
 
@@ -21,16 +21,9 @@ import { AuthGuard } from './guards/auth.guard';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    JwtModule.forRoot({
-     config: {
-       tokenGetter: () => {
-         return localStorage.getItem('token');
-       }
-     }
-   }),
-   IonicModule.forRoot(),
-   ReactiveFormsModule,
-   AppRoutingModule
+    IonicModule.forRoot(),
+    ReactiveFormsModule,
+    AppRoutingModule
    ],
   providers: [AuthService, AuthGuard, DataService, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

@@ -20,10 +20,8 @@ export class AuthGuard implements CanLoad {
       // استفاده از map برای تبدیل مقادیر
       map((isAuthenticated) => {
         if (isAuthenticated) {
-          console.log('check true', isAuthenticated);
           return true;
         } else {
-          console.log('check false', isAuthenticated);
           this.router.navigateByUrl('/sign-in');
           return false;
         }

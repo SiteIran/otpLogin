@@ -1,30 +1,31 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError, from } from 'rxjs';
 import { map, tap, switchMap } from 'rxjs/operators';
 import { Preferences } from '@capacitor/preferences';
 import { environment } from 'src/environments/environment';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
-const TOKEN_KEY = 'my-token';
+const TOKEN_KEY = environment.tokenKey;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8000/api';
-
+  private apiUrl = environment.apiUrl;
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
- token = '';
+  token = '';
 
-  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {
+  constructor(private http: HttpClient) {
     this.loadToken();
   }
 
+  /**
+   * بررسی وجود توکن در حافظه محلی و تنظیم وضعیت احراز هویت
+   */
   public async loadToken() {
     const token = await Preferences.get({ key: TOKEN_KEY });
     if (token && token.value) {
-      console.log('set token: ', token.value);
+      // console.log('set token: ', token.value);
       this.token = token.value;
       this.isAuthenticated.next(true);
     } else {
@@ -32,14 +33,30 @@ export class AuthService {
     }
   }
   
+  /**
+   * ایجاد هدر با توکن
+   */
+  createAuthHeader(): HttpHeaders {
+    const token = this.token;
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  }
 
+  /**
+   * ارسال کد OTP به شماره موبایل
+   * @param mobile شماره موبایل
+   */
   sendOTP(mobile: string): Observable<any> {
     const url = `${this.apiUrl}/authmobile`;
     return this.http.post(url, { mobile });
   }
 
-
-
+  /**
+   * ورود با شماره موبایل و کد OTP
+   * @param mobile شماره موبایل
+   * @param otpCode کد OTP
+   */
   login(mobile: string, otpCode: string): Observable<any> {
     const url = `${this.apiUrl}/verifymobile`;
     return this.http.post(url, { mobile, otpCode }).pipe(
@@ -51,17 +68,18 @@ export class AuthService {
       this.isAuthenticated.next(true);
      })
     );
-   }
-  
+  }
 
-   getUserInfo(): Observable<any> {
+  /**
+   * دریافت اطلاعات کاربر با استفاده از توکن
+   */
+  getUserInfo(): Observable<any> {
     const token = this.token;
-    if (token && !this.jwtHelper.isTokenExpired(token)) {
-      // اعتبارسنجی توکن با موفقیت انجام شده است
+    if (token) {
       this.isAuthenticated.next(true);
-      const userId = this.jwtHelper.decodeToken(token).userId;
-      const url = `${this.apiUrl}/users/${userId}`;
-      return this.http.get(url);
+      const url = `${this.apiUrl}/user-info`;
+      const headers = this.createAuthHeader();
+      return this.http.get(url, { headers });
     } else {
       this.isAuthenticated.next(false);
       console.log('توکن منقضی شده یا معتبر نیست');
@@ -70,11 +88,16 @@ export class AuthService {
       return throwError('توکن منقضی شده یا معتبر نیست');
     }
   }
-  
-  
 
-  logout(): Promise<void> {
+  /**
+   * خروج کاربر و حذف توکن
+   */
+  logout(): Observable<any> {
+    const token = this.token;
+    const url = `${this.apiUrl}/logout`;
     this.isAuthenticated.next(false);
-    return Preferences.remove({ key: TOKEN_KEY });
+    Preferences.remove({ key: TOKEN_KEY });
+    const headers = this.createAuthHeader();
+    return this.http.post(url, null, { headers });
   }
 }

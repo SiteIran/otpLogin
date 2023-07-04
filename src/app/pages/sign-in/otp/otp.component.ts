@@ -32,6 +32,7 @@ export class OtpComponent implements OnInit {
     this.startCountdown();
   }
 
+  // شروع شمارش معکوس
   startCountdown() {
     this.countdown = 120;
     const intervalId = setInterval(() => {
@@ -43,14 +44,17 @@ export class OtpComponent implements OnInit {
     }, 1000);
   }
 
+  // بستن مودال
   dismissModal() {
     this.modalCtrl.dismiss();
   }
 
+  // نمایش لودر
   showLoader(msg: string) {
     console.log(msg);
   }
 
+  // تغییرات در ورودی کد OTP
   onOtpChange(event: any) {
     if (event) {
       this.otp = event;
@@ -64,6 +68,7 @@ export class OtpComponent implements OnInit {
     }
   }
 
+  // تأیید کد OTP
   onVerifyOtp() {
     if (this.otp) {
       console.log(this.otp);
@@ -76,7 +81,7 @@ export class OtpComponent implements OnInit {
         this.authService.login(this.phone ?? '', this.otp ?? '').subscribe(
           () => {
             loading.dismiss();
-            this.modalCtrl.dismiss({ verified: true }); // اصلاح
+            this.modalCtrl.dismiss({ verified: true });
             this.showToast('OTP has been verified successfully.');
           },
           error => {
@@ -88,6 +93,7 @@ export class OtpComponent implements OnInit {
     }
   }
 
+  // ارسال مجدد کد OTP
   resendOtp() {
     if (this.phone) {
       this.loadingCtrl.create({
@@ -110,6 +116,7 @@ export class OtpComponent implements OnInit {
     }
   }
 
+  // نمایش پیام Toast
   async showToast(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,

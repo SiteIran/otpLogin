@@ -1,10 +1,10 @@
-import { OtpComponent } from './otp/otp.component';
-import { ModalController, ModalOptions } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ModalController, ModalOptions } from '@ionic/angular';
 
 import { AuthService } from 'src/app/services/auth.service';
+import { OtpComponent } from './otp/otp.component';
 
 @Component({
   selector: 'app-sign-in',
@@ -36,6 +36,8 @@ export class SignInPage implements OnInit {
       }
 
       const mobile = this.form.get('phone')!.value;
+
+      // ارسال درخواست OTP
       this.authService.sendOTP(mobile).subscribe(
         () => {
           // ارسال موفق
@@ -45,6 +47,7 @@ export class SignInPage implements OnInit {
         }
       );
 
+      // نمایش مودال برای ورود کد OTP
       const options: ModalOptions = {
         component: OtpComponent,
         componentProps: {
@@ -56,6 +59,7 @@ export class SignInPage implements OnInit {
       const { data } = await modal.onWillDismiss();
       console.log(data);
 
+      // اگر کد OTP تأیید شد، رفتن به صفحه خانه
       if (data && data.verified) {
         this.router.navigate(['/home'], { replaceUrl: true });
       }
